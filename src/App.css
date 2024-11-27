@@ -1,0 +1,49 @@
+/* App.css */
+
+/* Container to center everything and make it responsive */
+.container {
+  margin-top: 20px;
+}
+
+/* Make the tabs on the left side scrollable if content overflows */
+.react-tabs__tab-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Styling for tabs to look like buttons */
+.tab {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.tab.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Centering the title */
+h2.text-center {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Make the ag-Grid container span the full width */
+.ag-theme-alpine {
+  width: 100%;
+  height: 100%;
+}
+
+/* Optional: Customize the ag-Grid appearance */
+.ag-header-cell {
+  background-color: #f8f9fa;
+  color: #333;
+}
+.ag-cell {
+  padding: 10px;
+}
