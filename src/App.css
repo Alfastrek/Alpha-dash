@@ -1,49 +1,182 @@
-/* App.css */
-
-/* Container to center everything and make it responsive */
+/* General styling */
+body {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+} /* Container styling */
 .container {
-  margin-top: 20px;
-}
-
-/* Make the tabs on the left side scrollable if content overflows */
-.react-tabs__tab-list {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-/* Styling for tabs to look like buttons */
-.tab {
-  cursor: pointer;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  margin-bottom: 5px;
-  border-radius: 4px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #2a2a3f;
+  border-radius: 8px;
+  box-sizing: border-box; /* Ensure padding is included in the width */
+} /* Center-align title */
+h2,
+h3 {
   text-align: center;
+  color: #f0f0f0;
 }
 
-.tab.active {
+/* Folder Button Styling */
+button {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  padding: 10px;
+  text-align: left;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background-color: #3a3a4f;
+  color: #f0f0f0;
+  transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
+}
+
+button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+button:hover {
+  background-color: #0056b3;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* Styling for the CSV data table */
+.ag-theme-alpine-dark {
+  width: 100%;
+  border-radius: 5px;
+  color: #f0f0f0;
+  background-color: #1e1e2f;
+}
+
+.ag-header-cell,
+.ag-header,
+.ag-header-row,
+.ag-root-wrapper-body,
+.ag-layout-normal {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+}
+
+.ag-cell,
+.ag-header-cell-text,
+.ag-root,
+.ag-body-viewport,
+.ag-row {
+  color: #f0f0f0 !important;
+}
+
+.ag-row,
+.ag-row-odd,
+.ag-row-even {
+  background-color: #2a2a3f;
+}
+
+.ag-row:hover {
+  background-color: #33334d !important;
+}
+
+/* Styling the mobile-friendly layout */
+@media (max-width: 768px) {
+  .row {
+    display: block;
+  }
+
+  /* Adjust the folder/file buttons to stack on mobile */
+  .col-md-3 {
+    margin-bottom: 1rem;
+  }
+
+  .col-md-9 {
+    margin-top: 1rem;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .ag-theme-alpine-dark {
+    height: 400px; /* Reduce table height on smaller screens */
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop Layout */
+@media (min-width: 769px) {
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Folder buttons container */
+  .col-md-3 {
+    width: 25%;
+  }
+
+  /* File buttons container */
+  .col-md-9 {
+    width: 75%;
+  }
+
+  /* Keep buttons large and properly spaced */
+  button {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .ag-theme-alpine-dark {
+    height: 500px; /* Larger height for desktop */
+  }
+}
+
+/* Style the folder and file tabs */
+.btn {
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* Folder tabs */
+.btn-outline-primary.active {
   background-color: #007bff;
   color: white;
 }
 
-/* Centering the title */
-h2.text-center {
-  font-size: 1.8rem;
-  font-weight: 600;
+/* File tabs */
+.btn-outline-primary:not(.active) {
+  background-color: #2a2a3f;
+  color: #f0f0f0;
 }
 
-/* Make the ag-Grid container span the full width */
-.ag-theme-alpine {
-  width: 100%;
-  height: 100%;
+/* Icons for better alignment */
+i {
+  font-size: 18px;
+  margin-right: 8px;
 }
 
-/* Optional: Customize the ag-Grid appearance */
-.ag-header-cell {
-  background-color: #f8f9fa;
-  color: #333;
+/* Add hover effect */
+.btn-outline-primary:hover {
+  background-color: #0056b3;
+  color: white;
 }
-.ag-cell {
-  padding: 10px;
+
+/* Responsive for mobile view */
+@media (max-width: 768px) {
+  .btn-outline-primary {
+    font-size: 14px;
+    padding: 8px;
+  }
 }

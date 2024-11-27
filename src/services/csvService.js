@@ -1,17 +1,16 @@
 import Papa from "papaparse";
 
-// Function to load and parse CSV file
-const loadCSV = (file) => {
+const loadCSV = async (file) => {
   return new Promise((resolve, reject) => {
     Papa.parse(file, {
-      download: true, // Ensure the download option is enabled
+      download: true,
       complete: (result) => {
-        resolve(result.data); // Return the parsed data
+        resolve(result.data);
       },
       error: (error) => {
-        reject(error); // Handle any parsing errors
+        reject(error);
       },
-      header: true, // Treat first row as headers
+      header: true,
     });
   });
 };
