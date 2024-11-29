@@ -1,16 +1,17 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Dashboard from "./components/Dashboard";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import FileView from "./pages/FileView";
 import "./App.css";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
 
-const App = () => {
+function App() {
   return (
-    <div className="app">
-      <h1>Dynamic Report Dashboard</h1>
-      <Dashboard />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/:folder/:file" element={<FileView />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

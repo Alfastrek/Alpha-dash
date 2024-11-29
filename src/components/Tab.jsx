@@ -1,17 +1,16 @@
-import React from "react";
 import PropTypes from "prop-types";
 
 const Tab = ({ label, isActive, onClick, isFolderTab }) => {
   return (
     <button
-      className={`btn btn-outline-primary d-flex align-items-center ${
-        isActive ? "active" : ""
-      } ${isFolderTab ? "folder-tab" : "file-tab"} mb-2`}
+      className={`tab-btn ${isActive ? "active" : ""}`}
       onClick={onClick}
       aria-expanded={isActive}
     >
-      <i className={`fa ${isFolderTab ? "fa-folder" : "fa-file"} mr-2`} />
-      {label}
+      <span className="icon">
+        <i className={`fa ${isFolderTab ? "fa-folder" : "fa-file"}`} />
+      </span>
+      <span className="label">{label}</span>
     </button>
   );
 };
