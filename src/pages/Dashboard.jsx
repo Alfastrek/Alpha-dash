@@ -5,15 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import Loader from "../components/Loader";
+import Loader from "../components/Loader"; // Import the reusable loader
 import ToggleButton from "../components/ToggleButton";
+import CsvPreview from "../components/CsvPreview"; // Import the ToggleButton component
+
 const Dashboard = () => {
   const [csvData, setCsvData] = useState({});
   const [activeFolder, setActiveFolder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [fileStatuses, setFileStatuses] = useState({});
+  const [fileStatus, setFileStatus] = useState({}); // Store file status in state
   const navigate = useNavigate();
 
+  // Load CSV files and their data
   useEffect(() => {
     const loadCSVFiles = async () => {
       const folderStructure = {
@@ -42,6 +45,35 @@ const Dashboard = () => {
     loadCSVFiles();
   }, []);
 
+  // Load file status from localStorage
+  useEffect(() => {
+    const savedFileStatus = localStorage.getItem("fileStatus");
+    if (savedFileStatus) {
+      setFileStatus(JSON.parse(savedFileStatus)); // Parse and set the saved file status
+    }
+  }, []);
+
+  // Save file status to localStorage whenever it changes
+  useEffect(() => {
+    if (Object.keys(fileStatus).length > 0) {
+      localStorage.setItem("fileStatus", JSON.stringify(fileStatus)); // Save to localStorage
+    }
+  }, [fileStatus]);
+
+  // Toggle the active/inactive status of a file
+  const toggleFileStatus = (folder, file) => {
+    setFileStatus((prevStatus) => {
+      const newStatus = {
+        ...prevStatus,
+        [folder]: {
+          ...prevStatus[folder],
+          [file]: !prevStatus[folder]?.[file], // Toggle the status
+        },
+      };
+      return newStatus;
+    });
+  };
+
   const addSerialNumber = (data) =>
     data.map((row, index) => ({ ...row, serialNumber: index + 1 }));
 
@@ -55,12 +87,8 @@ const Dashboard = () => {
     return [];
   };
 
-  const handleToggleChange = (folder, file, e) => {
-    e.stopPropagation(); // Prevent the event from bubbling up to the parent button
-    setFileStatuses((prevState) => ({
-      ...prevState,
-      [`${folder}-${file}`]: !prevState[`${folder}-${file}`], // Toggle the file's active state
-    }));
+  const handleFileClick = (folder, file) => {
+    navigate(`/${folder}/${file}`); // Navigate to the file page
   };
 
   if (isLoading) {
@@ -82,22 +110,23 @@ const Dashboard = () => {
               />
               {activeFolder === folder && (
                 <ul className="file-list">
-                  {Object.keys(csvData[folder]).map((file) => (
-                    <li key={file} className="file-item">
-                      <button
-                        onClick={() => navigate(`/${folder}/${file}`)}
-                        className="file-link"
+                  {Object.keys(csvData[folder]).map((file) => {
+                    const isActive = fileStatus[folder]?.[file] !== false; // Check if the file is active
+                    return (
+                      <li
+                        key={file}
+                        className={`file-item ${
+                          isActive ? "active" : "inactive"
+                        }`}
                       >
                         {file}
-                      </button>
-                      <div className="toggle-button-wrapper">
                         <ToggleButton
-                          checked={fileStatuses[`${folder}-${file}`] || false}
-                          onChange={(e) => handleToggleChange(folder, file, e)} // Pass `e` to handle toggle
+                          checked={isActive} // Pass the active status to ToggleButton
+                          onChange={() => toggleFileStatus(folder, file)} // Toggle the file status on change
                         />
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
@@ -106,25 +135,34 @@ const Dashboard = () => {
 
         {activeFolder && (
           <div className="file-grid">
-            {Object.keys(csvData[activeFolder]).map((file) => (
-              <div key={file} className="file-section">
-                <h4 className="file-name">{file}</h4>
-                <div
-                  className="ag-theme-alpine-dark"
-                  style={{
-                    height: "200px",
-                    width: "100%",
-                  }}
-                >
-                  <AgGridReact
-                    rowData={addSerialNumber(csvData[activeFolder][file])}
-                    columnDefs={getColumnDefs(csvData[activeFolder][file])}
-                    pagination={true}
-                    paginationPageSize={5}
-                  />
-                </div>
-              </div>
-            ))}
+            {Object.keys(csvData[activeFolder]).map((file) => {
+              const isActive = fileStatus[activeFolder]?.[file] !== false;
+              return (
+                isActive && (
+                  <div
+                    key={file}
+                    className="file-section"
+                    onClick={() => handleFileClick(activeFolder, file)}
+                  >
+                    <h4 className="file-name">{file}</h4>
+                    <div
+                      className="ag-theme-alpine-dark"
+                      style={{
+                        height: "200px",
+                        width: "100%",
+                      }}
+                    >
+                      <AgGridReact
+                        rowData={addSerialNumber(csvData[activeFolder][file])}
+                        columnDefs={getColumnDefs(csvData[activeFolder][file])}
+                        pagination={true}
+                        paginationPageSize={5}
+                      />
+                    </div>
+                  </div>
+                )
+              );
+            })}
           </div>
         )}
       </div>

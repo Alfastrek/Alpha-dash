@@ -437,3 +437,27 @@ button:hover {
 .dashboard-nav .folder-file-node:active {
   background-color: #b0b0b0;
 }
+
+/* Hover effect for clickable file items */
+.file-section {
+  cursor: pointer; /* Change the cursor to indicate it's clickable */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+.file-section:hover {
+  /* Light background on hover */
+  transform: scale(1.05); /* Slightly scale the item to give a lift effect */
+}
+
+.file-section .file-name {
+  font-weight: bold;
+}
+
+.file-section .ag-theme-alpine-dark {
+  border: 1px solid #ccc;
+}
+
+/* Optional: add a subtle shadow for better visibility */
+.file-section:hover .ag-theme-alpine-dark {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
