@@ -106,10 +106,16 @@ body {
 .file-item {
   padding: 10px;
   margin: 5px 0;
-  background-color: #3a3a4f;
+  background-color: #9b63cf;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 200px;
+  font-family: "Parkinsans", serif;
+  font-optical-sizing: auto;
+  font-style: normal; /* Use the professional font */
+  font-size: 2rem; /* Increase font size */
+  font-weight: 300;
 }
 
 .file-item:hover {
@@ -319,6 +325,11 @@ button:hover {
 /* Folder Container */
 .folder-container {
   margin-bottom: 10px;
+  font-family: "Parkinsans", serif;
+  font-optical-sizing: auto;
+  font-style: normal; /* Use the professional font */
+  font-size: 2rem; /* Increase font size */
+  font-weight: 300;
 }
 
 /* Animations */
@@ -936,4 +947,60 @@ h3 {
 .upload-title {
   text-align: center;
   margin: 15px;
+}
+/* Add this to your styles.css or relevant file */
+
+.tab-btn {
+  position: relative;
+  padding: 10px;
+  background-color: transparent;
+  border: 1px solid #ccc; /* Default border, if no color is selected */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background-color 0.3s ease; /* Smooth transition for background change */
+}
+
+.color-selector {
+  font-size: 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  color: #555;
+}
+
+.color-dropdown-overlay {
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Position the dropdown to the right of the tab */
+  transform: translateY(-50%); /* Align it vertically with the tab */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Optional: adds some shadow for visibility */
+}
+
+.color-option {
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.color-option:hover {
+  transform: scale(1.2);
+}
+
+/* Optional: Add some hover effects for tab */
+.tab-btn:hover {
+  background-color: #f1f1f1;
+}
+.original-button-return {
+  color: #000000;
 }
