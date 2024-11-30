@@ -12,8 +12,8 @@ const Tab = ({
   const [showColorDropdown, setShowColorDropdown] = useState(false);
 
   const handleColorSelect = (selectedColor) => {
-    onColorSelect(selectedColor);
-    setShowColorDropdown(false);
+    onColorSelect(selectedColor); // Pass the selected color to parent component
+    setShowColorDropdown(false); // Close the color dropdown after selection
   };
 
   return (
@@ -27,6 +27,7 @@ const Tab = ({
         fontSize: "1.2rem",
         fontWeight: 400,
         width: "220px",
+        position: "relative", // Set relative position to anchor the dropdown
       }}
     >
       <span className="icon">
@@ -39,13 +40,18 @@ const Tab = ({
         className="color-selector"
         onClick={(e) => {
           e.stopPropagation();
-          setShowColorDropdown(!showColorDropdown);
+          setShowColorDropdown(!showColorDropdown); // Toggle dropdown visibility
+        }}
+        style={{
+          fontSize: "1.5rem",
+          marginLeft: "10px",
+          cursor: "pointer",
         }}
       >
         ●
       </span>
 
-      {/* Color dropdown as an overlay to the right */}
+      {/* Color dropdown as an overlay below the button */}
       {showColorDropdown && (
         <div className="color-dropdown-overlay">
           {["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF6347"].map(
@@ -54,7 +60,7 @@ const Tab = ({
                 key={color}
                 className="color-option"
                 style={{ backgroundColor: color }}
-                onClick={() => handleColorSelect(color)}
+                onClick={() => handleColorSelect(color)} // Set the color on click
               ></div>
             )
           )}

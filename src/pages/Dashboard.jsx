@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import ToggleButton from "../components/ToggleButton";
 import DataGrid from "react-data-grid";
-
 import "react-data-grid/lib/styles.css";
 
 const Dashboard = () => {
@@ -15,10 +14,23 @@ const Dashboard = () => {
   const [fileStatus, setFileStatus] = useState({});
   const [previewData, setPreviewData] = useState({});
   const [folderLoading, setFolderLoading] = useState(false);
-  const [tags, setTags] = useState({}); // New state to store tags for each file
+  const [tags, setTags] = useState({});
+  const [folderColors, setFolderColors] = useState({});
   const navigate = useNavigate();
 
+  const getFolderColorsFromLocalStorage = () => {
+    const savedColors = localStorage.getItem("folderColors");
+    return savedColors ? JSON.parse(savedColors) : {};
+  };
+
+  const saveFolderColorsToLocalStorage = (colors) => {
+    localStorage.setItem("folderColors", JSON.stringify(colors));
+  };
+
   useEffect(() => {
+    const savedColors = getFolderColorsFromLocalStorage();
+    setFolderColors(savedColors);
+
     const loadCSVFiles = async () => {
       const folderStructure = {
         folder1: ["a.csv", "b.csv", "c.csv", "d.csv"],
@@ -51,63 +63,16 @@ const Dashboard = () => {
     loadCSVFiles();
   }, []);
 
-  useEffect(() => {
-    const savedFileStatus = localStorage.getItem("fileStatus");
-    if (savedFileStatus) {
-      setFileStatus(JSON.parse(savedFileStatus));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(fileStatus).length > 0) {
-      localStorage.setItem("fileStatus", JSON.stringify(fileStatus));
-    }
-  }, [fileStatus]);
-
-  // Load and save tags in localStorage
-  useEffect(() => {
-    const savedTags = localStorage.getItem("fileTags");
-    if (savedTags) {
-      setTags(JSON.parse(savedTags));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(tags).length > 0) {
-      localStorage.setItem("fileTags", JSON.stringify(tags));
-    }
-  }, [tags]);
-
-  const toggleFileStatus = (folder, file) => {
-    setFileStatus((prevStatus) => {
-      const newStatus = {
-        ...prevStatus,
-        [folder]: {
-          ...prevStatus[folder],
-          [file]: !prevStatus[folder]?.[file],
-        },
-      };
-      return newStatus;
-    });
-  };
-
-  const handleFileClick = (folder, file) => {
-    navigate(`/${folder}/${file}`);
-  };
-
   const handleFolderChange = (folder) => {
     setFolderLoading(true);
     setActiveFolder(folder);
     setTimeout(() => setFolderLoading(false), 300);
   };
 
-  const handleTagChange = (folder, file, tag) => {
-    setTags((prevTags) => {
-      const newTags = { ...prevTags };
-      if (!newTags[folder]) newTags[folder] = {};
-      newTags[folder][file] = tag;
-      return newTags;
-    });
+  const handleColorSelect = (folder, color) => {
+    const newColors = { ...folderColors, [folder]: color };
+    setFolderColors(newColors);
+    saveFolderColorsToLocalStorage(newColors);
   };
 
   if (isLoading || folderLoading) {
@@ -126,6 +91,8 @@ const Dashboard = () => {
                 isActive={folder === activeFolder}
                 onClick={() => handleFolderChange(folder)}
                 isFolderTab={true}
+                color={folderColors[folder]}
+                onColorSelect={(color) => handleColorSelect(folder, color)}
               />
               {activeFolder === folder && (
                 <ul className="file-list">
@@ -141,15 +108,30 @@ const Dashboard = () => {
                         {file}
                         <ToggleButton
                           checked={isActive}
-                          onChange={() => toggleFileStatus(folder, file)}
+                          onChange={() =>
+                            setFileStatus((prevStatus) => {
+                              const newStatus = {
+                                ...prevStatus,
+                                [folder]: {
+                                  ...prevStatus[folder],
+                                  [file]: !prevStatus[folder]?.[file],
+                                },
+                              };
+                              return newStatus;
+                            })
+                          }
                         />
-                        {/* Add an input field for tags */}
                         <input
                           type="text"
                           placeholder="Tags"
                           value={tags[folder]?.[file] || ""}
                           onChange={(e) =>
-                            handleTagChange(folder, file, e.target.value)
+                            setTags((prevTags) => {
+                              const newTags = { ...prevTags };
+                              if (!newTags[folder]) newTags[folder] = {};
+                              newTags[folder][file] = e.target.value;
+                              return newTags;
+                            })
                           }
                           style={{
                             marginTop: "10px",
@@ -194,7 +176,7 @@ const Dashboard = () => {
                   <div
                     key={file}
                     className="file-section"
-                    onClick={() => handleFileClick(activeFolder, file)}
+                    onClick={() => navigate(`/${activeFolder}/${file}`)}
                   >
                     <h4 className="file-name">
                       {file}{" "}
@@ -213,21 +195,11 @@ const Dashboard = () => {
                               ).map((key) => ({
                                 key: key,
                                 name: key,
-                                resizable: true,
                               }))
                             : []
                         }
                         rows={previewData[activeFolder][file] || []}
-                        rowHeight={35}
-                        pagination={true}
-                        paginationPageSize={5}
-                        onRowsChange={(rows) =>
-                          setPreviewData({
-                            ...previewData,
-                            [activeFolder]: { [file]: rows },
-                          })
-                        }
-                        style={{ width: "100%" }}
+                        rowKey="id"
                       />
                     </div>
                   </div>

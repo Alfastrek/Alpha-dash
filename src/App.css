@@ -522,6 +522,9 @@ button:hover {
 
 .folder-container {
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .file-list {
@@ -969,38 +972,46 @@ h3 {
   color: #555;
 }
 
+/* Make the color dropdown more compact and professional */
 .color-dropdown-overlay {
   position: absolute;
-  top: 50%;
-  left: 100%; /* Position the dropdown to the right of the tab */
-  transform: translateY(-50%); /* Align it vertically with the tab */
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
+  top: 100%; /* Position below the button */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust position to center */
+  background-color: #ffffff0f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  border-radius: 5px; /* Add rounded corners */
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Optional: adds some shadow for visibility */
+  width: auto; /* Let the width adjust to content */
+  display: flex;
+  justify-content: space-around; /* Center the color options */
+  gap: 8px; /* Add spacing between color options */
 }
 
+/* Style for individual color options */
 .color-option {
   width: 20px;
   height: 20px;
-  margin: 5px;
-  border-radius: 50%;
+  border-radius: 50%; /* Keep color options as circles */
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, opacity 0.3s ease; /* Smooth hover effect */
 }
 
+/* Hover effect to make it look more interactive */
 .color-option:hover {
-  transform: scale(1.2);
+  transform: scale(1.2); /* Slightly enlarge on hover */
+  opacity: 0.8;
 }
 
-/* Optional: Add some hover effects for tab */
-.tab-btn:hover {
-  background-color: #f1f1f1;
+/* Optional: Style the color dot inside the tab */
+.color-selector {
+  font-size: 1.2rem;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
-.original-button-return {
-  color: #000000;
+
+.color-selector:hover {
+  color: #333; /* Darken the dot color on hover */
 }
