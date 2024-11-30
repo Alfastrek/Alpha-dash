@@ -2,18 +2,17 @@ import { useState, useEffect } from "react";
 import Tab from "../components/Tab";
 import loadCSV from "../services/csvService";
 import { useNavigate } from "react-router-dom";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import Loader from "../components/Loader"; // Import the reusable loader
+import Loader from "../components/Loader"; // Reusable loader component
 import ToggleButton from "../components/ToggleButton";
-import CsvPreview from "../components/CsvPreview"; // Import the ToggleButton component
+import DataGrid from "react-data-grid";
+import "react-data-grid/lib/styles.css"; // Import the styles for react-data-grid
 
 const Dashboard = () => {
   const [csvData, setCsvData] = useState({});
   const [activeFolder, setActiveFolder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [fileStatus, setFileStatus] = useState({}); // Store file status in state
+  const [previewData, setPreviewData] = useState({}); // Store preview data for CSV files
   const navigate = useNavigate();
 
   // Load CSV files and their data
@@ -26,12 +25,16 @@ const Dashboard = () => {
       };
 
       const data = {};
+      const preview = {}; // Object to hold preview data
+
       for (const folder in folderStructure) {
         data[folder] = {};
+        preview[folder] = {}; // Initialize preview for the folder
         for (const file of folderStructure[folder]) {
           try {
             const parsedData = await loadCSV(`/csv/${folder}/${file}`);
             data[folder][file] = parsedData;
+            preview[folder][file] = parsedData.slice(0, 10); // Only get the first 10 rows for preview
           } catch (error) {
             console.error(`Error loading ${file}:`, error);
           }
@@ -39,6 +42,7 @@ const Dashboard = () => {
       }
 
       setCsvData(data);
+      setPreviewData(preview); // Set the preview data
       setIsLoading(false);
     };
 
@@ -74,19 +78,7 @@ const Dashboard = () => {
     });
   };
 
-  const addSerialNumber = (data) =>
-    data.map((row, index) => ({ ...row, serialNumber: index + 1 }));
-
-  const getColumnDefs = (data) => {
-    if (Array.isArray(data) && data.length > 0 && data[0]) {
-      return [
-        { headerName: "S.No", field: "serialNumber", width: 90 },
-        ...Object.keys(data[0]).map((key) => ({ headerName: key, field: key })),
-      ];
-    }
-    return [];
-  };
-
+  // Handle click on a file to navigate to its detailed view
   const handleFileClick = (folder, file) => {
     navigate(`/${folder}/${file}`); // Navigate to the file page
   };
@@ -135,6 +127,7 @@ const Dashboard = () => {
 
         {activeFolder && (
           <div className="file-grid">
+            {/* Display the CSV preview on the dashboard */}
             {Object.keys(csvData[activeFolder]).map((file) => {
               const isActive = fileStatus[activeFolder]?.[file] !== false;
               return (
@@ -145,18 +138,30 @@ const Dashboard = () => {
                     onClick={() => handleFileClick(activeFolder, file)}
                   >
                     <h4 className="file-name">{file}</h4>
-                    <div
-                      className="ag-theme-alpine-dark"
-                      style={{
-                        height: "200px",
-                        width: "100%",
-                      }}
-                    >
-                      <AgGridReact
-                        rowData={addSerialNumber(csvData[activeFolder][file])}
-                        columnDefs={getColumnDefs(csvData[activeFolder][file])}
+                    <div className="grid-container">
+                      <DataGrid
+                        columns={
+                          previewData[activeFolder][file]?.length > 0
+                            ? Object.keys(
+                                previewData[activeFolder][file][0]
+                              ).map((key) => ({
+                                key: key,
+                                name: key,
+                                resizable: true,
+                              }))
+                            : []
+                        }
+                        rows={previewData[activeFolder][file] || []}
+                        rowHeight={35}
                         pagination={true}
                         paginationPageSize={5}
+                        onRowsChange={(rows) =>
+                          setPreviewData({
+                            ...previewData,
+                            [activeFolder]: { [file]: rows },
+                          })
+                        }
+                        style={{ width: "100%" }}
                       />
                     </div>
                   </div>

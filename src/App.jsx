@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import FileView from "./pages/FileView";
+import "react-data-grid/lib/styles.css";
+
 import "./App.css";
 
 function App() {
