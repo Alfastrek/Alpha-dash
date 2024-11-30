@@ -12,12 +12,11 @@ const Dashboard = () => {
   const [csvData, setCsvData] = useState({});
   const [activeFolder, setActiveFolder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [fileStatus, setFileStatus] = useState({}); // Store file status in state
-  const [previewData, setPreviewData] = useState({}); // Store preview data for CSV files
-  const [folderLoading, setFolderLoading] = useState(false); // State to track folder loading
+  const [fileStatus, setFileStatus] = useState({});
+  const [previewData, setPreviewData] = useState({});
+  const [folderLoading, setFolderLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Load CSV files and their data
   useEffect(() => {
     const loadCSVFiles = async () => {
       const folderStructure = {
@@ -36,7 +35,7 @@ const Dashboard = () => {
           try {
             const parsedData = await loadCSV(`/csv/${folder}/${file}`);
             data[folder][file] = parsedData;
-            preview[folder][file] = parsedData.slice(0, 10); // Only get the first 10 rows for preview
+            preview[folder][file] = parsedData.slice(0, 10);
           } catch (error) {
             console.error(`Error loading ${file}:`, error);
           }
@@ -98,7 +97,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Pick your Files:</h1>
+      <h1 className="dashboard-title">Pick your Selection</h1>
       <div className="dashboard-content">
         <nav className="dashboard-nav floating-sidebar">
           {Object.keys(csvData).map((folder) => (

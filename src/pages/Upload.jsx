@@ -1,79 +1,72 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import loadCSV from "../services/csvService";
+import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import Loader from "../components/Loader";
+import Loader from "../components/Loader"; // Reuse your loader component
+import loadCSV from "../services/csvService"; // Import loadCSV from csvService.js
+import { useNavigate } from "react-router-dom";
 
-const FileView = () => {
-  const { folder, file } = useParams();
-  const navigate = useNavigate();
-  const [fileData, setFileData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const Upload = () => {
+  const [csvData, setCsvData] = useState([]);
+  const [columnDefs, setColumnDefs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [customTags, setCustomTags] = useState("");
   const [tagField, setTagField] = useState("");
   const [uniqueTags, setUniqueTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [groupByEnabled, setGroupByEnabled] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await loadCSV(`/csv/${folder}/${file}`);
-        setFileData(data);
-      } catch (error) {
-        console.error(`Error loading ${folder}/${file}:`, error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [folder, file]);
-
-  const addSerialNumber = (data) =>
-    data.map((row, index) => ({ ...row, serialNumber: index + 1 }));
-
-  const getColumnDefs = (data) => {
-    if (Array.isArray(data) && data.length > 0 && data[0]) {
-      let columnDefs = [
-        { headerName: "S.No", field: "serialNumber", width: 90 },
-        ...Object.keys(data[0]).map((key) => ({
-          headerName: key,
-          field: key,
-        })),
-      ];
-
-      return columnDefs;
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file) {
+      setFileName(file.name);
     }
-    return [];
+
+    setIsLoading(true);
+
+    // Using loadCSV from csvService.js
+    loadCSV(file)
+      .then((result) => {
+        const columns = result[0]
+          ? Object.keys(result[0]).map((key) => ({
+              headerName: key,
+              field: key,
+            }))
+          : [];
+
+        setColumnDefs(columns);
+        setCsvData(result.slice(1));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error parsing CSV file:", error);
+        setIsLoading(false);
+      });
   };
 
+  // Grouping functionality
   const addTagsToData = () => {
     if (!tagField || !customTags) return;
     const tagsArray = customTags.split(",").map((tag) => tag.trim());
-    const updatedData = fileData.map((row, index) => ({
+    const updatedData = csvData.map((row, index) => ({
       ...row,
-      [tagField]: tagsArray[index % tagsArray.length],
+      [tagField]: tagsArray[index % tagsArray.length], // Assign tags cyclically
     }));
-    setFileData(updatedData);
+    setCsvData(updatedData);
   };
 
+  // Extract unique tag values from a selected column
   const getUniqueValuesForTagField = (field) => {
     if (!field) return;
-    const values = fileData.map((row) => row[field]);
+    const values = csvData.map((row) => row[field]);
     const uniqueValues = [...new Set(values)];
     setUniqueTags(uniqueValues);
   };
 
-  useEffect(() => {
-    if (tagField) {
-      getUniqueValuesForTagField(tagField);
-    }
-  }, [tagField, fileData]);
-
-  const filteredFields = Object.keys(fileData[0] || {})
+  const filteredFields = Object.keys(csvData[0] || {})
     .filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort();
 
@@ -82,22 +75,33 @@ const FileView = () => {
   }
 
   return (
-    <div className="file-view">
+    <div className="upload-page">
+      <h2 className="upload-title">Upload Your CSV File</h2>
       <button onClick={() => navigate("/")} className="original-button-return">
         Back to Home
       </button>
-      <h2 className="file-title">{`${folder}/${file}`}</h2>
-
-      {/* Toggle Button for Group By */}
-      <button
-        onClick={() => setGroupByEnabled(!groupByEnabled)}
-        className="original-button-group-by"
+      <div
+        className="upload-container"
+        style={{ display: "flex", alignItems: "center", gap: "10px" }}
       >
-        {groupByEnabled ? "Disable Group By" : "Enable Group By"}
-      </button>
+        <input
+          type="file"
+          accept=".csv"
+          onChange={handleFileUpload}
+          className="upload-input"
+          style={{ width: "110px" }} // Adjust the width as needed
+        />
+        {fileName && <span style={{ marginLeft: "10px" }}>{fileName}</span>}
+        <button
+          onClick={() => setGroupByEnabled(!groupByEnabled)}
+          className="original-button-group-by"
+          style={{ alignSelf: "flex-start", marginLeft: "900px" }} // Align the button to the left
+        >
+          {groupByEnabled ? "Disable Group By" : "Enable Group By"}
+        </button>
+      </div>
 
-      {/* Custom Tag Input only when Group By is enabled */}
-      {groupByEnabled && (
+      {fileName && groupByEnabled && (
         <div className="tag-controls mb-3">
           <label style={{ color: "#000000" }}>
             Select Field for Tags:
@@ -109,12 +113,14 @@ const FileView = () => {
               className="form-control mb-2"
             />
             <select
-              onChange={(e) => setTagField(e.target.value)}
+              onChange={(e) => {
+                setTagField(e.target.value);
+                getUniqueValuesForTagField(e.target.value);
+              }}
               value={tagField}
               className="form-control"
             >
               <option value="">--Select Field--</option>
-              {/* Dynamically generate options based on CSV fields */}
               {filteredFields.map((key) => (
                 <option key={key} value={key}>
                   {key}
@@ -123,7 +129,6 @@ const FileView = () => {
             </select>
           </label>
 
-          {/* Show unique tag values as a dropdown */}
           {tagField && (
             <div>
               <label>Select Tag from the list:</label>
@@ -142,7 +147,6 @@ const FileView = () => {
             </div>
           )}
 
-          {/* Manually enter comma-separated tags */}
           <input
             type="text"
             placeholder="Enter comma-separated tags (Manually)"
@@ -158,11 +162,11 @@ const FileView = () => {
 
       <div
         className="ag-theme-alpine-dark"
-        style={{ height: "500px", width: "100%" }}
+        style={{ height: "500px", width: "100%", marginTop: "20px" }}
       >
         <AgGridReact
-          rowData={addSerialNumber(fileData)}
-          columnDefs={getColumnDefs(fileData)}
+          rowData={csvData}
+          columnDefs={columnDefs}
           pagination={true}
           paginationPageSize={10}
           groupUseEntireRow={groupByEnabled}
@@ -172,4 +176,4 @@ const FileView = () => {
   );
 };
 
-export default FileView;
+export default Upload;

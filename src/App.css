@@ -48,24 +48,35 @@ body {
 
 /* Titles */
 .dashboard-title,
-.file-title {
+.file-title,
+.upload-title {
   text-align: center;
   margin-bottom: 20px;
   color: #f0f0f0;
   transition: color 0.3s ease;
-  font-family: "Roboto", sans-serif; /* Use the professional font */
+  font-family: "Parkinsans", serif;
+  font-optical-sizing: auto;
+  font-style: normal; /* Use the professional font */
   font-size: 2rem; /* Increase font size */
-  font-weight: 700; /* Bold font weight */
-  letter-spacing: 1px; /* Add letter spacing for better readability */
+  font-weight: 300; /* Bold font weight */
+  letter-spacing: 1px;
   background: linear-gradient(
     90deg,
-    #2563eb,
-    #6a0dad
+    #2b6eff,
+    #820fd4
   ); /* Blue-purple gradient */
   -webkit-background-clip: text;
   color: transparent;
+  animation: fadeIn 1s ease-in-out; /* Apply fade-in animation */
 }
-
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 /* Dashboard Content Layout */
 .dashboard-content {
   display: flex;
@@ -397,6 +408,13 @@ button:hover {
   margin-left: 10px;
   justify-content: flex-end;
 }
+.toggle-container.success .react-toggle-track {
+  background-color: green !important;
+}
+
+.toggle-container.failure .react-toggle-track {
+  background-color: red !important;
+}
 
 /* Adjusting the file list styling */
 .file-list {
@@ -550,10 +568,35 @@ button:hover {
 }
 
 /* General Styles */
+/* File View Section with Metallic Gradient */
 .file-view {
   padding: 20px;
   font-family: Arial, sans-serif;
   color: #fff;
+  background: linear-gradient(
+    135deg,
+    #2a2a2a,
+    #4d4d4d,
+    #6b6b6b,
+    #8c8c8c
+  ); /* Metallic shades of gray */
+  background-size: 400% 400%;
+  animation: metallic-gradient 12s ease infinite; /* Adding animation for a shifting metallic effect */
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Slightly deeper shadow for metallic depth */
+}
+
+/* Adding a smooth, shifting metallic gradient effect */
+@keyframes metallic-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Back Button */
@@ -572,11 +615,14 @@ button:hover {
 
 /* File Title */
 .file-title {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 24px; /* Increase font size */
+  font-weight: 700; /* Bold font weight */
   margin-bottom: 15px;
+  color: #ffffff; /* Set text color to white */
+  font-family: "Roboto", sans-serif; /* Use the professional font */
+  letter-spacing: 1px; /* Add letter spacing for better readability */
+  text-shadow: 1px 1px 2px #000000; /* Add a bit of black border line */
 }
-
 /* Grouping Controls */
 .grouping-controls,
 .tag-controls {
@@ -648,12 +694,6 @@ input.form-control {
 }
 
 /* Title Styling */
-.file-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 20px;
-}
 
 /* Buttons */
 button {
@@ -785,4 +825,115 @@ input {
 .original-button-return {
   background-color: #ffffff;
   box-shadow: 5px 5px 0px 0px rgb(0, 170, 255);
+}
+/* Floating Sidebar as a Card with Gradient */
+.dashboard-nav.floating-sidebar {
+  top: 20px;
+  left: 20px;
+  width: 250px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a1a, #212121);
+  border-radius: 15px; /* Rounded Corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Soft Shadow */
+  z-index: 10;
+  transition: all 0.3s ease;
+  overflow-y: auto;
+  border: 1px solid #ddd; /* Card Border */
+}
+
+/* Hover effect for the sidebar */
+.dashboard-nav.floating-sidebar:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Folder container inside the sidebar */
+.folder-container {
+  margin-bottom: 20px;
+}
+
+/* File list styling */
+.file-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.file-upload-view-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.upload-section {
+  max-width: 300px;
+  padding: 20px;
+  background-color: #f7f7f700;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.view-section {
+  flex: 2;
+  padding: 20px;
+  margin-left: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.original-button,
+.original-button-upload {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.original-button-return {
+  background-color: #ffffff;
+  color: black;
+  padding: 5px 10px; /* Reduce padding */
+  font-size: 14px;
+  width: 150px; /* Adjust width to fit content */
+  height: 30px; /* Adjust height to fit content */
+  margin-bottom: 20px;
+  white-space: nowrap; /* Ensure content is in one line */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.original-button-group-by {
+  background-color: #ffffff;
+  color: black;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+h3 {
+  color: #333;
+}
+
+.file-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.tag-controls {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.upload-title {
+  text-align: center;
+  margin: 15px;
 }
