@@ -53,6 +53,17 @@ body {
   margin-bottom: 20px;
   color: #f0f0f0;
   transition: color 0.3s ease;
+  font-family: "Roboto", sans-serif; /* Use the professional font */
+  font-size: 2rem; /* Increase font size */
+  font-weight: 700; /* Bold font weight */
+  letter-spacing: 1px; /* Add letter spacing for better readability */
+  background: linear-gradient(
+    90deg,
+    #2563eb,
+    #6a0dad
+  ); /* Blue-purple gradient */
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 /* Dashboard Content Layout */
@@ -739,7 +750,8 @@ input {
 }
 
 .original-button,
-.original-button-group-by {
+.original-button-group-by,
+.original-button-return {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -758,7 +770,8 @@ input {
 }
 
 .original-button:hover,
-.original-button-group-by:hover {
+.original-button-group-by:hover,
+.original-button-return:hover {
   box-shadow: 0 0 #333;
   color: #fff;
   background-color: #333;
@@ -767,4 +780,9 @@ input {
   height: 30px;
   font-size: 14px;
   width: 150px;
+}
+
+.original-button-return {
+  background-color: #ffffff;
+  box-shadow: 5px 5px 0px 0px rgb(0, 170, 255);
 }

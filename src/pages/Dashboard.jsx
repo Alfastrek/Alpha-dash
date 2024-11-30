@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Tab from "../components/Tab";
 import loadCSV from "../services/csvService";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader"; // Reusable loader component
+import Loader from "../components/Loader";
 import ToggleButton from "../components/ToggleButton";
 import DataGrid from "react-data-grid";
 
-import "react-data-grid/lib/styles.css"; // Import the styles for react-data-grid
+import "react-data-grid/lib/styles.css";
 
 const Dashboard = () => {
   const [csvData, setCsvData] = useState({});
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [fileStatus, setFileStatus] = useState({}); // Store file status in state
   const [previewData, setPreviewData] = useState({}); // Store preview data for CSV files
+  const [folderLoading, setFolderLoading] = useState(false); // State to track folder loading
   const navigate = useNavigate();
 
   // Load CSV files and their data
@@ -84,27 +85,34 @@ const Dashboard = () => {
     navigate(`/${folder}/${file}`); // Navigate to the file page
   };
 
-  if (isLoading) {
-    return <Loader size={60} color="#4caf50" />;
+  // When switching folders, set folderLoading to true
+  const handleFolderChange = (folder) => {
+    setFolderLoading(true);
+    setActiveFolder(folder);
+    setTimeout(() => setFolderLoading(false), 300); // Simulate loading delay (for demo purposes)
+  };
+
+  if (isLoading || folderLoading) {
+    return <Loader size={60} color="#4caf50" />; // Show loader while loading folder or data
   }
 
   return (
     <div className="dashboard">
-      <h2 className="dashboard-title">CSV Report Dashboard</h2>
+      <h1 className="dashboard-title">Pick your Files:</h1>
       <div className="dashboard-content">
-        <nav className="dashboard-nav">
+        <nav className="dashboard-nav floating-sidebar">
           {Object.keys(csvData).map((folder) => (
             <div key={folder} className="folder-container">
               <Tab
                 label={folder}
                 isActive={folder === activeFolder}
-                onClick={() => setActiveFolder(folder)}
+                onClick={() => handleFolderChange(folder)}
                 isFolderTab={true}
               />
               {activeFolder === folder && (
                 <ul className="file-list">
                   {Object.keys(csvData[folder]).map((file) => {
-                    const isActive = fileStatus[folder]?.[file] !== false; // Check if the file is active
+                    const isActive = fileStatus[folder]?.[file] !== false;
                     return (
                       <li
                         key={file}
@@ -114,8 +122,8 @@ const Dashboard = () => {
                       >
                         {file}
                         <ToggleButton
-                          checked={isActive} // Pass the active status to ToggleButton
-                          onChange={() => toggleFileStatus(folder, file)} // Toggle the file status on change
+                          checked={isActive}
+                          onChange={() => toggleFileStatus(folder, file)}
                         />
                       </li>
                     );
@@ -128,7 +136,6 @@ const Dashboard = () => {
 
         {activeFolder && (
           <div className="file-grid">
-            {/* Display the CSV preview on the dashboard */}
             {Object.keys(csvData[activeFolder]).map((file) => {
               const isActive = fileStatus[activeFolder]?.[file] !== false;
               return (
