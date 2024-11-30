@@ -11,10 +11,10 @@ const FileView = () => {
   const navigate = useNavigate();
   const [fileData, setFileData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showGroupBy, setShowGroupBy] = useState(false); // Toggle for "Group By" section
-  const [selectedField, setSelectedField] = useState(""); // Selected field for grouping
   const [customTags, setCustomTags] = useState(""); // Stores user-defined comma-separated tags
   const [tagField, setTagField] = useState(""); // Stores the current field for grouping by tags
+  const [uniqueTags, setUniqueTags] = useState([]); // Stores unique values for tag field dropdown
+  const [searchQuery, setSearchQuery] = useState(""); // Search query for filtering dropdown options
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +34,7 @@ const FileView = () => {
   const addSerialNumber = (data) =>
     data.map((row, index) => ({ ...row, serialNumber: index + 1 }));
 
-  const getColumnDefs = (data, selectedField) => {
+  const getColumnDefs = (data) => {
     if (Array.isArray(data) && data.length > 0 && data[0]) {
       let columnDefs = [
         { headerName: "S.No", field: "serialNumber", width: 90 },
@@ -43,17 +43,6 @@ const FileView = () => {
           field: key,
         })),
       ];
-
-      // Add grouping for selected field
-      if (selectedField) {
-        columnDefs.unshift({
-          headerName:
-            selectedField.charAt(0).toUpperCase() + selectedField.slice(1),
-          field: selectedField,
-          rowGroup: true,
-          hide: true,
-        });
-      }
 
       return columnDefs;
     }
@@ -71,6 +60,25 @@ const FileView = () => {
     setFileData(updatedData);
   };
 
+  // Function to extract unique values from the selected column for tags
+  const getUniqueValuesForTagField = (field) => {
+    if (!field) return;
+    const values = fileData.map((row) => row[field]);
+    const uniqueValues = [...new Set(values)];
+    setUniqueTags(uniqueValues);
+  };
+
+  useEffect(() => {
+    if (tagField) {
+      getUniqueValuesForTagField(tagField); // Update unique values when tagField changes
+    }
+  }, [tagField, fileData]);
+
+  // Filter function for search query
+  const filteredFields = Object.keys(fileData[0] || {})
+    .filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase())) // Filter based on search query
+    .sort(); // Sort alphabetically
+
   if (isLoading) {
     return <Loader />;
   }
@@ -82,64 +90,63 @@ const FileView = () => {
       </button>
       <h2 className="file-title">{`${folder}/${file}`}</h2>
 
-      {/* Group By Toggle */}
-      <button
-        onClick={() => setShowGroupBy(!showGroupBy)}
-        className="original-button"
-      >
-        {showGroupBy ? "Hide Group By" : "Apply Group By"}
-      </button>
+      {/* Custom Tag Input */}
+      <div className="tag-controls mb-3">
+        <label>
+          Select Field for Tags:
+          <input
+            type="text"
+            placeholder="Search field Manually or Select from Dropdown"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Search query to filter dropdown options
+            className="form-control mb-2"
+          />
+          <select
+            onChange={(e) => setTagField(e.target.value)}
+            value={tagField}
+            className="form-control"
+          >
+            <option value="">--Select Field--</option>
+            {/* Dynamically generate options based on CSV fields */}
+            {filteredFields.map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </label>
 
-      {/* Conditionally render Group By and Tag Input sections */}
-      {showGroupBy && (
-        <div>
-          <div className="grouping-controls mb-3">
-            <label>
-              Group by:
-              <select
-                onChange={(e) => setSelectedField(e.target.value)}
-                value={selectedField}
-              >
-                <option value="">--Select Grouping Field--</option>
-                <option value="date">Date</option>
-                <option value="tags">Tags</option>}
-              </select>
-            </label>
-          </div>
-
-          {/* Custom Tag Input */}
-          <div className="tag-controls mb-3">
-            <label>
-              Select Field for Tags:
-              <select
-                onChange={(e) => setTagField(e.target.value)}
-                value={tagField}
-              >
-                <option value="">--Select Field--</option>
-                {/* Dynamically generate options based on CSV fields */}
-                {Object.keys(fileData[0] || {}).map((key) => (
-                  <option key={key} value={key}>
-                    {key}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter comma-separated tags"
-              value={customTags}
+        {/* Show unique tag values as a dropdown */}
+        {tagField && (
+          <div>
+            <label>Select Tag from the list:</label>
+            <select
               onChange={(e) => setCustomTags(e.target.value)}
-              className="form-control mt-2"
-            />
-            <button
-              onClick={addTagsToData}
-              className="original-button-group-by"
+              value={customTags}
+              className="form-control mb-2"
             >
-              Apply Tags
-            </button>
+              <option value="">--Select Tag--</option>
+              {uniqueTags.map((tag, index) => (
+                <option key={index} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Manually enter comma-separated tags */}
+        <input
+          type="text"
+          placeholder="Enter comma-separated tags (Manually)"
+          value={customTags}
+          onChange={(e) => setCustomTags(e.target.value)}
+          className="form-control mt-2"
+        />
+        <button onClick={addTagsToData} className="original-button-group-by">
+          Apply Tags
+        </button>
+      </div>
 
       <div
         className="ag-theme-alpine-dark"
@@ -147,7 +154,7 @@ const FileView = () => {
       >
         <AgGridReact
           rowData={addSerialNumber(fileData)}
-          columnDefs={getColumnDefs(fileData, selectedField)}
+          columnDefs={getColumnDefs(fileData)}
           pagination={true}
           paginationPageSize={10}
           groupUseEntireRow={true}

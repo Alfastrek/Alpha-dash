@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader"; // Reusable loader component
 import ToggleButton from "../components/ToggleButton";
 import DataGrid from "react-data-grid";
+
 import "react-data-grid/lib/styles.css"; // Import the styles for react-data-grid
 
 const Dashboard = () => {
