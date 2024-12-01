@@ -18,14 +18,14 @@ A highly customizable dashboard allows users to toggle folder visibility, ensuri
 ### 4. **Grid-based File Display with Pagination**  
 Files are displayed in a structured, grid-like interface. Pagination ensures smooth navigation even with large datasets, providing a seamless browsing experience.  
 
-### 5. **Advanced File Viewing with ag-Grid**  
-The file viewing component leverages the powerful `ag-Grid` library, enabling advanced functionalities like:  
+### 5. **Advanced File Viewing with Ka-Table**  
+The file viewing component leverages the powerful `Ka-table` library, enabling advanced functionalities like:  
    - **Group-by Columns**: Organize data hierarchically for better insights.  
    - **Sorting**: Sort data by any column for easy analysis.  
    - **Interactive Viewing**: View files in a clean and intuitive format.  
 
 ### 6. **Custom File Uploading and Parsing**  
-Users can upload any CSV file via a dedicated file uploader. Once uploaded, the file is parsed using `papa-parser` and displayed in an `ag-Grid` component, where users can:  
+Users can upload any CSV file via a dedicated file uploader. Once uploaded, the file is parsed using `papa-parser` and displayed in an `Ka-Table` component, where users can:  
    - **Sort Data**  
    - **Group Data by Columns**  
    - **Analyze the Data Interactively**  
