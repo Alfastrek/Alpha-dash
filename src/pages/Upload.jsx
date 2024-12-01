@@ -2,8 +2,8 @@ import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import Loader from "../components/Loader"; // Reuse your loader component
-import loadCSV from "../services/csvService"; // Import loadCSV from csvService.js
+import Loader from "../components/Loader"; 
+import loadCSV from "../services/csvService"; 
 import { useNavigate } from "react-router-dom";
 
 const Upload = () => {
@@ -89,13 +89,13 @@ const Upload = () => {
           accept=".csv"
           onChange={handleFileUpload}
           className="upload-input"
-          style={{ width: "110px" }} // Adjust the width as needed
+          style={{ width: "110px" }} 
         />
         {fileName && <span style={{ marginLeft: "10px" }}>{fileName}</span>}
         <button
           onClick={() => setGroupByEnabled(!groupByEnabled)}
           className="original-button-group-by"
-          style={{ alignSelf: "flex-start", marginLeft: "900px" }} // Align the button to the left
+          style={{ alignSelf: "flex-start", marginLeft: "900px" }} 
         >
           {groupByEnabled ? "Disable Group By" : "Enable Group By"}
         </button>
