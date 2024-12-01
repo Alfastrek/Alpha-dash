@@ -39,7 +39,7 @@ const Welcome = () => {
             <h2 className="subHeading">Your Data, Organized and Analyzed.</h2>
             <div style={{ display: "flex", gap: "10px" }}>
               <button className="btnn" onClick={handleTryOutClick}>
-                Existing File
+                Sample CSV's
               </button>
               <button className="btnn" onClick={handleUploadClick}>
                 Upload Yours
