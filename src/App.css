@@ -1003,6 +1003,9 @@ h3 {
   transform: scale(1.2); /* Slightly enlarge on hover */
   opacity: 0.8;
 }
+.color-option[style*="background-color: transparent"] {
+  border: 0.5px solid #fff; /* White border for transparent option */
+}
 
 /* Optional: Style the color dot inside the tab */
 .color-selector {

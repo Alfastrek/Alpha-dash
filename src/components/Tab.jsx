@@ -54,16 +54,21 @@ const Tab = ({
       {/* Color dropdown as an overlay below the button */}
       {showColorDropdown && (
         <div className="color-dropdown-overlay">
-          {["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF6347"].map(
-            (color) => (
-              <div
-                key={color}
-                className="color-option"
-                style={{ backgroundColor: color }}
-                onClick={() => handleColorSelect(color)} // Set the color on click
-              ></div>
-            )
-          )}
+          {[
+            "#FF0000",
+            "#00FF00",
+            "#0000FF",
+            "#FFFF00",
+            "#FF6347",
+            "transparent",
+          ].map((color) => (
+            <div
+              key={color}
+              className="color-option"
+              style={{ backgroundColor: color }}
+              onClick={() => handleColorSelect(color)} // Set the color on click
+            ></div>
+          ))}
         </div>
       )}
     </button>
