@@ -83,7 +83,10 @@ const FileView = () => {
 
   return (
     <div className="file-view">
-      <button onClick={() => navigate("/")} className="original-button-return">
+      <button
+        onClick={() => navigate("/dashboard")}
+        className="original-button-return"
+      >
         Back to Home
       </button>
       <h2 className="file-title">{`${folder}/${file}`}</h2>
