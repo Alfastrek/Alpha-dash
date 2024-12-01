@@ -15,7 +15,20 @@ const FileView = () => {
   const [tagField, setTagField] = useState("");
   const [uniqueTags, setUniqueTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [groupByEnabled, setGroupByEnabled] = useState(false);
+  const [filterEnabled, setFilterEnabled] = useState(false);
+
+  // AG-Grid Column Definitions
+  const [gridOptions, setGridOptions] = useState({
+    columnDefs: [
+      { field: "country" },
+      { field: "year" },
+      { field: "athlete" },
+      { field: "sport" },
+      { field: "total" },
+    ],
+    pagination: true,
+    paginationPageSize: 10,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,18 +49,17 @@ const FileView = () => {
     data.map((row, index) => ({ ...row, serialNumber: index + 1 }));
 
   const getColumnDefs = (data) => {
-    if (Array.isArray(data) && data.length > 0 && data[0]) {
-      let columnDefs = [
-        { headerName: "S.No", field: "serialNumber", width: 90 },
-        ...Object.keys(data[0]).map((key) => ({
-          headerName: key,
-          field: key,
-        })),
-      ];
+    const dynamicColumns = Object.keys(data[0] || {}).map((key) => ({
+      headerName: key,
+      field: key,
+      filter: true, // Enable filtering for all columns
+      // You can customize filter types here if needed
+    }));
 
-      return columnDefs;
-    }
-    return [];
+    return [
+      { field: "serialNumber", headerName: "S.No", width: 90 },
+      ...dynamicColumns,
+    ];
   };
 
   const addTagsToData = () => {
@@ -91,16 +103,16 @@ const FileView = () => {
       </button>
       <h2 className="file-title">{`${folder}/${file}`}</h2>
 
-      {/* Toggle Button for Group By */}
+      {/* Toggle Button for Filter */}
       <button
-        onClick={() => setGroupByEnabled(!groupByEnabled)}
+        onClick={() => setFilterEnabled(!filterEnabled)}
         className="original-button-group-by"
       >
-        {groupByEnabled ? "Disable Group By" : "Enable Group By"}
+        {filterEnabled ? "Disable Filter" : "Enable Filter"}
       </button>
 
-      {/* Custom Tag Input only when Group By is enabled */}
-      {groupByEnabled && (
+      {/* Custom Tag Input only when Filter is enabled */}
+      {filterEnabled && (
         <div className="tag-controls mb-3">
           <label style={{ color: "#000000" }}>
             Select Field for Tags:
@@ -166,9 +178,10 @@ const FileView = () => {
         <AgGridReact
           rowData={addSerialNumber(fileData)}
           columnDefs={getColumnDefs(fileData)}
+          gridOptions={gridOptions}
           pagination={true}
           paginationPageSize={10}
-          groupUseEntireRow={groupByEnabled}
+          filterEnabled={filterEnabled}
         />
       </div>
     </div>
