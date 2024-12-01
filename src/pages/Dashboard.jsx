@@ -123,7 +123,7 @@ const Dashboard = () => {
                         />
                         <input
                           type="text"
-                          placeholder="Tags"
+                          placeholder="InputTags"
                           value={tags[folder]?.[file] || ""}
                           onChange={(e) =>
                             setTags((prevTags) => {
@@ -138,7 +138,7 @@ const Dashboard = () => {
                             height: "20px",
                             width: "60px",
                             padding: "10px",
-                            fontSize: "14px",
+                            fontSize: "9px",
                             textAlign: "center",
                             backgroundColor: "#f4f4f4",
                           }}
