@@ -1,0 +1,232 @@
+/* General Styles for the Table */
+.ka-table-container {
+  margin-top: 20px;
+  background-color: #1a1a1a; /* Darker background for more contrast */
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); /* Stronger shadow for a more prominent effect */
+  color: #e0e0e0; /* Lighter text for better readability */
+  border: 2px solid #000; /* Dark black border around the container */
+}
+
+/* Grouping Bar Above the Table */
+.ka-grouping-bar {
+  background-color: #222; /* Even darker grouping bar */
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #d4d4d4; /* Light gray text */
+  border: 1px solid #000; /* Black border */
+}
+
+/* Pagination Container */
+.ka-pagination-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.ka-table-pagination {
+  display: inline-flex;
+  margin-top: 10px;
+}
+
+.ka-table-pagination button {
+  background-color: #333; /* Darker button background */
+  color: #e0e0e0; /* Lighter text */
+  padding: 8px 16px;
+  margin: 0 6px;
+  border: 1px solid #111; /* Dark border for a more subtle look */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.ka-table-pagination button:hover {
+  background-color: #444; /* Slightly lighter button on hover */
+}
+
+.ka-table-pagination button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #555; /* Focused state with a gray shadow */
+}
+
+.ka-table-pagination .ka-pagination-active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.ka-table-pagination .ka-pagination-disabled {
+  background-color: #333;
+  color: #777;
+}
+
+/* Table Styles */
+.ka-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: 1px solid #000; /* Black border around the table */
+}
+
+.ka-table th,
+.ka-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #333; /* Darker border for each cell */
+  font-size: 14px;
+}
+
+.ka-table th {
+  background-color: #1e1e1e; /* Darker header background */
+  font-weight: bold;
+  color: #e0e0e0; /* Light text for better contrast */
+}
+
+.ka-table td {
+  background-color: #2a2a2a; /* Slightly lighter table rows */
+  color: #ccc;
+}
+
+.ka-table td:hover {
+  background-color: #3b3b3b; /* Darker hover effect */
+}
+
+.ka-table .ka-row:hover {
+  background-color: #333; /* Slightly lighter hover */
+}
+
+/* Style for Serial Number Column */
+.ka-table th[data-column-key="serialNumber"],
+.ka-table td[data-column-key="serialNumber"] {
+  text-align: center;
+  background-color: #333; /* Dark background for serial number column */
+}
+
+/* Grouping Panel Style */
+.ka-table-groupPanel {
+  background-color: #222; /* Darker grouping panel */
+  color: #e0e0e0;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: normal;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #000; /* Black border */
+}
+
+.ka-table-groupPanel .ka-groupPanel-text {
+  font-size: 14px;
+}
+
+.ka-table-groupPanel .ka-groupPanel-column {
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #333; /* Darker column backgrounds */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  border: 1px solid #000; /* Black border */
+}
+
+.ka-table-groupPanel .ka-groupPanel-column:hover {
+  background-color: #444;
+}
+
+.ka-table-groupPanel .ka-groupPanel-column:active {
+  background-color: #555;
+}
+
+/* Style for Input Fields (Search, Tags) */
+.ka-table-container input[type="text"],
+.ka-table-container select {
+  background-color: #333; /* Dark input background */
+  color: #fff;
+  border: 2px solid #111; /* Darker border */
+  padding: 12px 15px;
+  border-radius: 5px;
+  margin-top: 12px;
+  width: 100%;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.ka-table-container input[type="text"]:focus,
+.ka-table-container select:focus {
+  outline: none;
+  border-color: #007bff; /* Blue border color on focus */
+}
+
+/* Responsive Styling for Mobile */
+@media (max-width: 768px) {
+  .ka-table-container {
+    padding: 15px;
+  }
+
+  .ka-table th,
+  .ka-table td {
+    padding: 8px 10px;
+  }
+
+  .ka-table-pagination button {
+    padding: 6px 12px;
+  }
+
+  .ka-grouping-bar,
+  .ka-table-groupPanel {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+}
+
+/* Specific Style for Description Column */
+.ka-table td[data-column-key="description"] {
+  max-width: 200px;  /* Set a maximum width for the column */
+  white-space: nowrap;  /* Prevent the text from wrapping to the next line */
+  overflow: hidden;  /* Hide overflow text */
+  text-overflow: ellipsis;  /* Show '...' for overflow text */
+}
+
+/* Optionally, you can apply the same technique to other columns */
+.ka-table td[data-column-key="description"], 
+.ka-table th[data-column-key="description"] {
+  max-width: 250px;  /* Adjust based on your needs */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Custom Dark Group Panel */
+.ka-group-panel {
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  text-align: center; /* Ensure the text is centered */
+  height: 100%; /* Ensure it takes the full height of the container */
+  background-color: #222; /* Darker group panel background */
+  border: 1px solid #000; /* Dark border */
+  color: #f5f5f5; /* Lighter text color */
+}
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
