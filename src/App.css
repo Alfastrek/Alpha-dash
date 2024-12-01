@@ -16,7 +16,7 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  transition: background-color 0.3s ease-in-out; /* Smooth background transition */
+  transition: background-color 0.3s ease-in-out; 
 }
 
 /* Global Container Styling */
