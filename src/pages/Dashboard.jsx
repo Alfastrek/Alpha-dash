@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Tab from "../components/Tab";
 import loadCSV from "../services/csvService";
 import { useNavigate } from "react-router-dom";
@@ -63,11 +63,11 @@ const Dashboard = () => {
     loadCSVFiles();
   }, []);
 
-  const handleFolderChange = (folder) => {
-    setFolderLoading(true);
+  const handleFolderChange = useCallback((folder) => {
+    // setFolderLoading(false);
     setActiveFolder(folder);
-    setTimeout(() => setFolderLoading(false), 300);
-  };
+    // setTimeout(() => setFolderLoading(false), 300);
+  }, []);
 
   const handleColorSelect = (folder, color) => {
     const newColors = { ...folderColors, [folder]: color };
