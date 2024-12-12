@@ -69,7 +69,7 @@ const Welcome = () => {
               color: "#ffffff",
             }}
           >
-            Assignment Created for AlphaGrep by Aradhya Shukla.
+            By Aradhya Shukla
             <a
               href="https://github.com/Alfastrek/Alpha-dash"
               target="_blank"
